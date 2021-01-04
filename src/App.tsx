@@ -1,26 +1,35 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from "react";
+import "./App.css";
+import NewToDo from "./components/NewToDo";
+import ToDoList from "./components/ToDoList";
 
-function App() {
+//we can separate this too in diff file
+interface ToDosState {
+  id: string;
+  text: string;
+}
+
+const App: React.FC = () => {
+  const [todos, setTodos] = useState<ToDosState[]>([]);
+
+  const handleAddToDo = (text: string) => {
+    setTodos((prevTodos) => [
+      ...prevTodos,
+      { id: Math.random().toString(), text: text },
+    ]);
+  };
+
+  const handleDelete = (toDoId: string) => {
+    setTodos((prevTodos) => {
+      return prevTodos.filter((item) => item.id !== toDoId);
+    });
+  };
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <NewToDo onAdd={handleAddToDo} />
+      <ToDoList items={todos} deleteTask={handleDelete} />
     </div>
   );
-}
+};
 
 export default App;
